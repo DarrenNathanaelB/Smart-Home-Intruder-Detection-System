@@ -63,7 +63,7 @@ wait_falling_edge:
       ;-----------------------------------------------------------
       LDS   R28, ICR1L          ;store count value at falling edge
       ;-----------------------------------------------------------
-      SUB   R28, R16            ;count diff R22 = R22 - R16
+      SUB   R28, R16            ;count diff R28 = R28 - R16
       ADD   R28, 17
       OUT   TIFR1, R21          ;clear flag for next sensor reading
       RET
@@ -72,9 +72,9 @@ wait_falling_edge:
 ;=============================================================================================
 compare:
       CPI R28, 40
-      BRCS emergency_lock
+      BRCS emergency_check
       CPI R28, 75
-      BRCS warning
+      BRCS warning_check
       ;-----------------------------------------------------------
       ; Normal Mode
       CBI PORTD, 5  ; RED
@@ -84,6 +84,18 @@ compare:
       ; Disable buzzer
       CBI PORTD, 3
       ;-----------------------------------------------------------
+      RJMP skip
+;===============================================================
+emergency_check:
+      RCALL delay_5s
+      CPI R28, 40
+      BRCS emergency_lock
+      RJMP skip
+;===============================================================
+warning_check:
+      RCALL delay_5s
+      CPI R28, 75
+      BRCS warning
       RJMP skip
 ;===============================================================
 emergency_lock:
@@ -162,7 +174,7 @@ MAX7219_display:
       ;--------------------------------------------------------
       LDI   R17, 0x02         ;select digit 1
       LDI   R18, 0b00010101   ;data = (paruh pertama karakter 'm')
-      RCALL send_bytes        ;send command & data to MAX7219
+      RCALL send_bytes        ;send command & data ke MAX7219
       ;--------------------------------------------------------
       LDI   R17, 0x01         ;select digit 0
       LDI   R18, 0b00010101   ;data = (paruh kedua karakter 'm')
@@ -245,3 +257,19 @@ l8:   DEC   R23
       DEC   R21
       BRNE  l6
       RET
+;===============================================================
+delay_5s:
+    ldi  r21, 2   
+    ldi  r22, 150
+    ldi  r23, 216
+    ldi  r24, 9
+l_5: 
+    dec  r24
+    brne l_5
+    dec  r23
+    brne l_5
+    dec  r22
+    brne l_5
+    dec  r21
+    brne l_5
+    RET
