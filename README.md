@@ -57,3 +57,12 @@ Additional delay subroutines like delay_timer0 for 10 microseconds, delay_ms for
 ### Flowchart
 ![Screenshot 2024-05-28 002558](https://github.com/DarrenNathanaelB/Smart-Home-Intruder-Detection-System/assets/144119254/b8bbebb6-d094-4d34-89ae-e5fd0babde71)
 
+## Test Result and Performance Evaluation
+
+| Parameter                                                    | Status  |
+| ------------------------------------------------------------ | ------- |
+| Object detection using sensor HC-SR04     | SUCCESS |
+| Showing object distance from the sensor using MAX 7219     | SUCCESS |
+| Audio and visual alert with LED and Buzzer         | SUCCESS |
+| Auto-lock door when emergency mode triggered | SUCCESS |
+| Ensure the object is near the sensor for 5 seconds before the alert | SUCCESS |
